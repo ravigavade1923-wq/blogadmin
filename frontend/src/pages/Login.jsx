@@ -1,6 +1,3 @@
-
-
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axios";
@@ -32,8 +29,10 @@ const Login = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
+      alert("Login successful");
       navigate("/profile");
     } catch (error) {
+      console.error("Login error:", error.response?.data || error.message);
       alert(error.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axios";
@@ -14,6 +13,9 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const normalizeDomain = (value = "") =>
+    value.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/$/, "");
+
   const handleChange = (e) => {
     setForm((prev) => ({
       ...prev,
@@ -27,13 +29,20 @@ const Register = () => {
     try {
       setLoading(true);
 
-      const { data } = await api.post("/auth/register", form);
+      const payload = {
+        ...form,
+        domainName: normalizeDomain(form.domainName),
+      };
+
+      const { data } = await api.post("/auth/register", payload);
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
+      alert("Registration successful");
       navigate("/profile");
     } catch (error) {
+      console.error("Register error:", error.response?.data || error.message);
       alert(error.response?.data?.message || "Registration failed");
     } finally {
       setLoading(false);
@@ -50,8 +59,7 @@ const Register = () => {
         <div className="admin-auth-left">
           <div className="admin-brand-badge">ADMIN PANEL</div>
           <h1>
-            Register To  <span>  <br />Open <br />
-            </span> Workspace
+            Register To <span><br />Open <br /></span> Workspace
           </h1>
           <p>
             Register your domain, securely manage access, and control blog
@@ -88,7 +96,7 @@ const Register = () => {
                 <input
                   type="text"
                   name="domainName"
-                  placeholder="example.com"
+                  placeholder="webmarkx.com"
                   value={form.domainName}
                   onChange={handleChange}
                   required
@@ -112,7 +120,7 @@ const Register = () => {
                 <input
                   type="text"
                   name="number"
-                  placeholder="+91 98765 43210"
+                  placeholder="+91 9876543210"
                   value={form.number}
                   onChange={handleChange}
                   required

@@ -17,6 +17,10 @@ const allowedOrigins = [
   "https://digitalmarkx-9u52.vercel.app",
   "https://blog-dashboard-git-main-ravigavade1923-wqs-projects.vercel.app",
   "https://digitalmarkx.vercel.app",
+
+  // live website domains add kar
+  "https://webmarkx.com",
+  "https://www.webmarkx.com",
 ];
 
 const vercelPreviewRegex = /^https:\/\/.*\.vercel\.app$/;
@@ -47,6 +51,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
+// uploads folder static serve
 app.use("/src/uploads", express.static(path.resolve("src/uploads")));
 
 app.get("/", (req, res) => {

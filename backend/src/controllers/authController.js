@@ -6,6 +6,9 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
 const mobileRegex = /^[0-9+\-\s]{10,15}$/;
 
+const normalizeDomain = (value = "") =>
+  value.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/$/, "");
+
 export const registerUser = async (req, res) => {
   try {
     const { domainName, email, number, password } = req.body;
@@ -14,7 +17,7 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const cleanDomainName = domainName.trim().toLowerCase();
+    const cleanDomainName = normalizeDomain(domainName);
     const cleanEmail = email.trim().toLowerCase();
     const cleanNumber = number.trim();
     const cleanPassword = password.trim();
@@ -65,6 +68,7 @@ export const registerUser = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("registerUser error:", error);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -105,6 +109,7 @@ export const loginUser = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("loginUser error:", error);
     return res.status(500).json({ message: error.message });
   }
 };

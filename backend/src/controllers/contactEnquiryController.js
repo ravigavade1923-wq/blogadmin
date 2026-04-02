@@ -11,6 +11,7 @@ export const createContactEnquiry = async (req, res) => {
       service,
       message,
       privacy,
+      source,
     } = req.body;
 
     if (!firstName || !lastName || !email || !message) {
@@ -28,6 +29,7 @@ export const createContactEnquiry = async (req, res) => {
       service: service?.trim() || "",
       message: message.trim(),
       privacy: privacy || "Accepted",
+      source: source || "Website Contact Form",
     });
 
     return res.status(201).json({
@@ -35,6 +37,7 @@ export const createContactEnquiry = async (req, res) => {
       enquiry,
     });
   } catch (error) {
+    console.error("createContactEnquiry error:", error);
     return res.status(500).json({
       message: error.message,
     });
@@ -46,6 +49,7 @@ export const getAllContactEnquiries = async (req, res) => {
     const enquiries = await ContactEnquiry.find().sort({ createdAt: -1 });
     return res.status(200).json(enquiries);
   } catch (error) {
+    console.error("getAllContactEnquiries error:", error);
     return res.status(500).json({
       message: error.message,
     });
@@ -64,6 +68,7 @@ export const deleteContactEnquiry = async (req, res) => {
 
     return res.status(200).json({ message: "Enquiry deleted successfully" });
   } catch (error) {
+    console.error("deleteContactEnquiry error:", error);
     return res.status(500).json({
       message: error.message,
     });
@@ -87,6 +92,7 @@ export const updateContactEnquiryStatus = async (req, res) => {
       enquiry,
     });
   } catch (error) {
+    console.error("updateContactEnquiryStatus error:", error);
     return res.status(500).json({
       message: error.message,
     });
