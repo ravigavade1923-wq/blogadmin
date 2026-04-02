@@ -1,43 +1,4 @@
-// import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import api from "../api/axios";
 
-// const Login = () => {
-//   const [form, setForm] = useState({
-//     email: "",
-//     password: ""
-//   });
-//   const navigate = useNavigate();
-
-//   const handleChange = (e) => {
-//     setForm({ ...form, [e.target.name]: e.target.value });
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const { data } = await api.post("/auth/login", form);
-//       localStorage.setItem("token", data.token);
-//       localStorage.setItem("user", JSON.stringify(data.user));
-//       navigate("/profile");
-//     } catch (error) {
-//       alert(error.response?.data?.message || "Login failed");
-//     }
-//   };
-
-//   return (
-//     <div className="page-center">
-//       <form className="card-form" onSubmit={handleSubmit}>
-//         <h2>Admin Login</h2>
-//         <input name="email" type="email" placeholder="Email ID" onChange={handleChange} />
-//         <input name="password" type="password" placeholder="Password" onChange={handleChange} />
-//         <button type="submit">Login</button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Login;
 
 
 import { useState } from "react";
