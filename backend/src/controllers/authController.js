@@ -2,6 +2,10 @@ import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+const mobileRegex = /^[0-9+\-\s]{10,15}$/;
+
 export const registerUser = async (req, res) => {
   try {
     const { domainName, email, number, password } = req.body;
@@ -10,9 +14,26 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const cleanDomainName = domainName.trim();
+    const cleanDomainName = domainName.trim().toLowerCase();
     const cleanEmail = email.trim().toLowerCase();
     const cleanNumber = number.trim();
+    const cleanPassword = password.trim();
+
+    if (!domainRegex.test(cleanDomainName)) {
+      return res.status(400).json({ message: "Enter a valid domain name" });
+    }
+
+    if (!emailRegex.test(cleanEmail)) {
+      return res.status(400).json({ message: "Enter a valid email address" });
+    }
+
+    if (!mobileRegex.test(cleanNumber)) {
+      return res.status(400).json({ message: "Enter a valid mobile number" });
+    }
+
+    if (cleanPassword.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
 
     const existingDomain = await User.findOne({ domainName: cleanDomainName });
     if (existingDomain) {
@@ -24,11 +45,10 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Email already registered" });
     }
 
-    // PASSWORD HASHED ठेवणेच सुरक्षित आहे
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(cleanPassword, 10);
 
     const user = await User.create({
-      domainName: cleanDomainName, // original domain save होईल
+      domainName: cleanDomainName,
       email: cleanEmail,
       number: cleanNumber,
       password: hashedPassword,
@@ -58,13 +78,18 @@ export const loginUser = async (req, res) => {
     }
 
     const cleanEmail = email.trim().toLowerCase();
+    const cleanPassword = password.trim();
+
+    if (!emailRegex.test(cleanEmail)) {
+      return res.status(400).json({ message: "Enter a valid email address" });
+    }
 
     const user = await User.findOne({ email: cleanEmail });
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(cleanPassword, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }

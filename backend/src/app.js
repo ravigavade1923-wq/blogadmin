@@ -13,16 +13,23 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:5175",
-  "https://blog-dashboard-mauve.vercel.app",
+  "https://blogadmin.vercel.app",
+  "https://digitalmarkx-9u52.vercel.app",
   "https://blog-dashboard-git-main-ravigavade1923-wqs-projects.vercel.app",
   "https://digitalmarkx.vercel.app",
 ];
+
+const vercelPreviewRegex = /^https:\/\/.*\.vercel\.app$/;
 
 const corsOptions = {
   origin: function (origin, callback) {
     console.log("CORS Origin:", origin);
 
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      vercelPreviewRegex.test(origin)
+    ) {
       return callback(null, true);
     }
 
