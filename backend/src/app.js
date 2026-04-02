@@ -53,6 +53,10 @@ app.get("/", (req, res) => {
   res.json({ message: "Admin Blog Backend Running" });
 });
 
+app.get("/api", (req, res) => {
+  res.json({ message: "API working" });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/blogs", blogRoutes);
